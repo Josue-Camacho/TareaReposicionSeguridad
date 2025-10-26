@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "xOY0jEuOVh8=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\josue\\Documents\\U\\u2025-2\\TEC WEB\\TareaReposicionSecure\\TareaReposicionSecure\\TareaReposicionSecure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\josue\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.9\\microsoft.aspnetcore.openapi.9.0.9.nupkg.sha512",
+    "C:\\Users\\josue\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
