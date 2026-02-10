@@ -11,38 +11,51 @@ namespace TareaReposicionSecure.Controllers
     public class HospitalController : ControllerBase
     {
         private readonly IHospitalService _service;
+
         public HospitalController(IHospitalService service)
         {
             _service = service;
         }
 
+        // ============================
+        // GET: /api/hospital
+        // Público
+        // ============================
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllHospitals()
         {
             IEnumerable<Hospital> items = await _service.GetAll();
             return Ok(items);
         }
 
-        // NUEVO: Endpoint público para tipos 1 y 3
+        // ============================
+        // GET: /api/hospital/types/1,3
+        // Público
+        // ============================
         [HttpGet("types/{types}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetHospitalsByTypes(string types)
         {
-            try
-            {
-                // Convertir string "1,3" a array [1, 3]
-                var typeArray = types.Split(',')
-                    .Select(t => int.Parse(t.Trim()))
-                    .ToArray();
+            var typeArray = types
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => int.TryParse(t.Trim(), out var v) ? v : (int?)null)
+                .Where(v => v.HasValue)
+                .Select(v => v!.Value)
+                .Distinct()
+                .ToArray();
 
-                var hospitals = await _service.GetHospitalsByTypesAsync(typeArray);
-                return Ok(hospitals);
-            }
-            catch (FormatException)
-            {
+            if (!typeArray.Any())
                 return BadRequest("Invalid types format. Use comma-separated numbers (e.g., '1,3')");
-            }
+
+            var hospitals = await _service.GetHospitalsByTypesAsync(typeArray);
+            return Ok(hospitals);
         }
 
+        // ============================
+        // GET: /api/hospital/{id}
+        // Protegido
+        // ============================
         [HttpGet("{id:guid}")]
         [Authorize]
         public async Task<IActionResult> GetOne(Guid id)
@@ -58,20 +71,36 @@ namespace TareaReposicionSecure.Controllers
             }
         }
 
+        // ============================
+        // POST: /api/hospital
+        // Solo Admin
+        // ============================
         [HttpPost]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> CreateHospital([FromBody] CreateHospitalDto dto)
         {
-            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
+
             var hospital = await _service.CreateHospital(dto);
-            return CreatedAtAction(nameof(GetOne), new { id = hospital.Id }, hospital);
+
+            return CreatedAtAction(
+                nameof(GetOne),
+                new { id = hospital.Id },
+                hospital
+            );
         }
 
+        // ============================
+        // PUT: /api/hospital/{id}
+        // Protegido
+        // ============================
         [HttpPut("{id:guid}")]
         [Authorize]
         public async Task<IActionResult> UpdateHospital(Guid id, [FromBody] UpdateHospitalDto dto)
         {
-            if (!ModelState.IsValid) return ValidationProblem(ModelState);
+            if (!ModelState.IsValid)
+                return ValidationProblem(ModelState);
 
             try
             {
@@ -84,6 +113,10 @@ namespace TareaReposicionSecure.Controllers
             }
         }
 
+        // ============================
+        // DELETE: /api/hospital/{id}
+        // Solo Admin
+        // ============================
         [HttpDelete("{id:guid}")]
         [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteHospital(Guid id)

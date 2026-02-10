@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TareaReposicionSecure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+521ea3593dca0907b189c9dd11da40c104396f22")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+70d3c9581e4f716744042c1c25db58ee137c3496")]
 [assembly: System.Reflection.AssemblyProductAttribute("TareaReposicionSecure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TareaReposicionSecure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
